@@ -4,6 +4,7 @@ import path from "path";
 import http from "http";
 import { config } from "dotenv";
 import { randomUUID } from "crypto";
+import { send } from "process";
 
 
 config();
@@ -121,6 +122,26 @@ wss.on("connection", socket => {
 
 		try {
 
+			if(msg.method == "client.to_host"){
+				let target_host = hosts.get(msg.host_id);
+					
+				if(!target_host){
+					throw("target host does not exist")
+				}
+
+
+				target_host.send(msg)
+
+			}
+
+			if(msg.method == "host.to_client"){
+				let target_client = clients.get(msg.client_id);
+
+				if(!target_client){
+					throw("target client does not exist");
+				}
+				target_host.send(msg)
+			}
 
 			if(msg.method == "keepalive"){
 				socket.send(JSON.stringify({"method":"keepalive"}))
