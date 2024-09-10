@@ -114,7 +114,7 @@ const wss = new WebSocketServer({server});
 wss.on("connection", socket => {
 
 	socket.on("message", proto_msg => {
-	
+		
 
 		const msg = JSON.parse(proto_msg.toString());
 			
@@ -123,13 +123,13 @@ wss.on("connection", socket => {
 
 			if(msg.method == "client.to_host"){
 				let target_host = hosts.get(msg.host_id);
-					
-				if(!target_host){
-					throw("target host does not exist")
-				}
+				
 
+				console.log(target_host.send)
 
-				target_host.send(msg)
+				msg.sender_id = socket.client_id;
+
+				target_host.send(JSON.stringify(msg))
 
 			}
 
@@ -139,7 +139,10 @@ wss.on("connection", socket => {
 				if(!target_client){
 					throw("target client does not exist");
 				}
-				target_host.send(msg)
+
+				msg.sender_id = socket.host_id;
+
+				target_host.send(JSON.stringify(msg))
 			}
 
 			if(msg.method == "keepalive"){
