@@ -142,7 +142,7 @@ wss.on("connection", socket => {
 
 				msg.sender_id = socket.host_id;
 
-				target_host.send(JSON.stringify(msg))
+				target_client.send(JSON.stringify(msg))
 			}
 
 			if(msg.method == "keepalive"){
